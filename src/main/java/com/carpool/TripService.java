@@ -5,7 +5,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;                     
 import java.util.function.Supplier;     
-import java.util.stream.Collectors;    
+import java.util.stream.Collectors;   
+import java.nio.file.*;
+import java.util.concurrent.*; 
 
 public class TripService {
     // Collectitons
@@ -56,3 +58,30 @@ public class TripService {
 
     
 }
+    // NIO2
+    public void saveTrips(Path path) throws IOException {
+        try (var writer = Files.newBufferedWriter(path)) {
+            DateTimeFormatter fmt = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+            for (Trip t : trips) {
+                writer.write(t.id() + "," + t.rider().name() + "," + t.driver().getName() + "," + t.time().format(fmt));
+                writer.newLine();
+            }
+        }
+    }
+
+    // Concurrency ,Streams , Lambda
+    public void notifyRidersAsync() throws InterruptedException, ExecutionException {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+        List<Callable<String>> tasks = trips.stream()
+            .map(t -> (Callable<String>) () -> {
+                Thread.sleep(100);
+                return "Notified " + t.rider().name();
+            })
+            .collect(Collectors.toList());
+
+        List<Future<String>> results = executor.invokeAll(tasks);
+        for (Future<String> r : results) {
+            System.out.println(r.get());
+        }
+        executor.shutdown();
+    }
