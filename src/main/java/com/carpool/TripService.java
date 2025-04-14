@@ -1,5 +1,4 @@
 package com.carpool;
-
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -57,7 +56,7 @@ public class TripService {
     }
 
     
-}
+
     // NIO2
     public void saveTrips(Path path) throws IOException {
         try (var writer = Files.newBufferedWriter(path)) {
@@ -85,3 +84,4 @@ public class TripService {
         }
         executor.shutdown();
     }
+}
