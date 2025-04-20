@@ -1,10 +1,13 @@
 package com.carpool;
 
 import java.nio.file.Path;
+import java.util.ArrayDeque;
 import java.util.List;
-import java.util.Locale;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
+import java.util.Deque;
+import java.util.Iterator;
+
 
 //Switch, Pattern Matching, Records
 public class Main {
@@ -24,6 +27,8 @@ public class Main {
             System.out.println("2. View Scheduled Trips");
             System.out.println("3. Save Trips to File");
             System.out.println("4. Notify Riders");
+            System.out.println("6. Java 22");
+            System.out.println("7. Java 23");
             System.out.println("5. Exit");
             System.out.print("Select option: ");
             int choice = Integer.parseInt(scanner.nextLine());
@@ -76,6 +81,33 @@ public class Main {
                     catch (InterruptedException | ExecutionException e) { e.printStackTrace(); }
                 }
                 case 5 -> { System.out.println("Goodbye!"); exit = true; }
+                case 6 -> {
+                    System.out.println("Java 22 Unnamed Variable");
+                    record Driver(String name, int age, String city) {}
+                    Driver p = new Driver("Alice", 30, "Dublin");
+                    if (p instanceof Driver(_, int age, _)) {
+                        System.out.println("Extracted age only using unnamed pattern " + age);
+                    }
+                    System.out.print("Looping with unnamed variable");
+                    for (int _ : new int[]{1, 2, 3}) {
+                        System.out.print("# ");
+                    }
+                    System.out.println();
+                }
+                case 7 -> {
+                    System.out.println("Java 23: Sequenced Collections");
+                    Deque<String> deque = new ArrayDeque<>();
+                    deque.addFirst("First");
+                    deque.addLast("Last");
+                    System.out.println("First Element: " + deque.getFirst());
+                    System.out.println("Last Element: " + deque.getLast());
+                    System.out.println("Elements in reverse order:");
+                    Iterator<String> reverseIterator = deque.descendingIterator();
+                    while (reverseIterator.hasNext()) {
+                        System.out.println(reverseIterator.next());
+                    }
+                }
+
                 default -> System.out.println("Invalid option!");
             }
         }
